@@ -1,25 +1,26 @@
-﻿function Set-Subuser() {
-    Param(
-        [parameter(mandatory = $true)]
+function Set-Subuser {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$UserId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [PSCustomObject]$Body,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Method = 'PUT'
-        Body = $Body
-        Endpoint = 'subusers/' + $UserId
+        Secret   = $Secret
+        Public   = $Public
+        Method   = 'PUT'
+        Body     = $Body
+        Endpoint = 'subusers/{0}' -f $UserId
     }
-    
+
     Invoke-Reftab @Parameters
 }

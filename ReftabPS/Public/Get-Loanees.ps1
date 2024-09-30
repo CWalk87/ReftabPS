@@ -1,20 +1,21 @@
-﻿function Get-Loanees() {
-    Param( 
-        [parameter(mandatory = $true)]
-        [string]$secret,
-      
-        [parameter(mandatory = $true)]
-        [string]$public,
+function Get-Loanees {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Secret,
+
+        [Parameter(Mandatory)]
+        [string]$Public,
 
         [HashTable]$SearchParameters
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'loanees'
+        Secret           = $Secret
+        Public           = $Public
+        Endpoint         = 'loanees'
         SearchParameters = $SearchParameters
     }
-    
+
     Invoke-Reftab @Parameters
 }

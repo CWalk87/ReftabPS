@@ -1,11 +1,9 @@
-$scriptRoot = $PSScriptRoot + '\Public'
-
-Get-ChildItem $scriptRoot *.ps1 | ForEach-Object {
-    Import-Module $_.FullName
+$PrivateScriptRoot = Join-Path $PSScriptRoot 'Private' -Resolve
+Get-ChildItem -Path $PrivateScriptRoot -Filter *.ps1 | ForEach-Object {
+    . $_.FullName
 }
 
-$scriptRoot = $PSScriptRoot + '\Private'
-
-Get-ChildItem $scriptRoot *.ps1 | ForEach-Object {
-    Import-Module $_.FullName
+$PublicScriptRoot = Join-Path $PSScriptRoot 'Public' -Resolve
+Get-ChildItem -Path $PublicScriptRoot -Filter *.ps1 | ForEach-Object {
+    . $_.FullName
 }

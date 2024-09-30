@@ -1,25 +1,26 @@
-﻿function Set-Loan() {
-    Param(
-        [parameter(mandatory = $true)]
+function Set-Loan {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$LoanId,
-      
-        [parameter(mandatory = $true)]
-        [PSCustomObject]$Body,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
+        [pscustomobject]$Body,
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Method = 'PUT'
-        Body = $Body
-        Endpoint = 'loans/' + $LoanId
+        Secret   = $Secret
+        Public   = $Public
+        Method   = 'PUT'
+        Body     = $Body
+        Endpoint = 'loans/{0}' -f $LoanId
     }
-    
+
     Invoke-Reftab @Parameters
 }

@@ -1,8 +1,8 @@
-function New-Loanee {
+function Get-Category {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [PSCustomObject]$Body,
+        [string]$CategoryId,
 
         [Parameter(Mandatory)]
         [string]$Secret,
@@ -14,9 +14,7 @@ function New-Loanee {
     $Parameters = @{
         Secret   = $Secret
         Public   = $Public
-        Method   = 'POST'
-        Body     = $Body
-        Endpoint = 'loanees'
+        Endpoint = 'categories/{0}' -f $CategoryId
     }
 
     Invoke-Reftab @Parameters

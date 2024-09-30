@@ -1,72 +1,72 @@
-﻿function Invoke-Reftab {
+function Invoke-Reftab {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public,
-      
-        [ValidateSet("GET", "POST", "PUT", "DELETE")]
+
+        [ValidateSet('GET', 'POST', 'PUT', 'DELETE')]
         [string]$Method = 'GET',
-      
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Endpoint,
-      
+
         [PSCustomObject]$Body,
 
         [HashTable]$SearchParameters
     )
-    $uri = 'https://www.reftab.com/api/' + $Endpoint
+    $Uri = 'https://www.reftab.com/api/{0}' -f $Endpoint
+
     if ($SearchParameters) {
-        $uri += '?'
-        $paramCollection = @()
-        foreach($Param in $SearchParameters.keys) {
-            $paramCollection += $Param + '=' + $SearchParameters[$Param]
+        $Uri += '?'
+        $ParamCollection = @()
+        foreach ($Param in $SearchParameters.Keys) {
+            $ParamCollection += '{0}={1}' -f $Param, $SearchParameters[$Param]
         }
-        $uri += $paramCollection -join '&'
+        $Uri += $ParamCollection -join '&'
     }
-    $md5 = ''
-    $contentType = ''
+
+    $MD5 = ''
+    $ContentType = ''
+
     if ($Body) {
-        $Body = $Body | ConvertTo-JSON
+        $Body = $Body | ConvertTo-Json
         $Body = [System.Text.Encoding]::UTF8.GetBytes($Body)
-        $md5Provider = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
-        $md5 = [System.BitConverter]::ToString($md5Provider.ComputeHash($Body))
-        $md5 = $md5.ToLower() -replace '-', ''
-        $contentType = 'application/json'
+        $MD5Provider = [System.Security.Cryptography.MD5CryptoServiceProvider]::new()
+        $MD5 = [BitConverter]::ToString($MD5Provider.ComputeHash($Body))
+        $MD5 = $MD5.ToLower() -replace '-', ''
+        $ContentType = 'application/json'
     }
-    $now = Get-Date (Get-Date).ToUniversalTime() -UFormat '+%Y-%m-%dT%H:%M:%S.000Z'
-    $signatureToSign = $Method + "`n" +
-        $md5 + "`n" +
-        $contentType + "`n" +
-        $now + "`n" +
-        $uri
 
-    $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
-    $hmacsha.key = [Text.Encoding]::UTF8.GetBytes($Secret)
-    $signature = $hmacsha.ComputeHash([Text.Encoding]::UTF8.GetBytes($signatureToSign))
-    $signature = [System.BitConverter]::ToString($signature) -replace '-', ''
-    $signature = $signature.ToLower()
-    $signature = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($signature))
+    $Now = Get-Date -Format 'o'
 
+    $SignatureToSign = $Method + "`n" +
+    $MD5 + "`n" +
+    $ContentType + "`n" +
+    $Now + "`n" +
+    $Uri
 
-    $headers = @{
-        'Authorization' = 'RT ' + $Public + ':' + $signature
-        'x-rt-date' = $now
+    $HMACSHA = [System.Security.Cryptography.HMACSHA256]::new()
+    $HMACSHA.Key = [System.Text.Encoding]::UTF8.GetBytes($Secret)
+    $Signature = $HMACSHA.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($SignatureToSign))
+    $Signature = [BitConverter]::ToString($Signature) -replace '-', ''
+    $Signature = $Signature.ToLower()
+    $Signature = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($Signature))
+
+    $Headers = @{
+        Accept        = 'application/json'
+        Authorization = 'RT {0}:{1}' -f $Public, $Signature
+        'x-rt-date'   = $Now
     }
     try {
-        Invoke-RestMethod -Uri $Uri -Method $Method -Body $Body -Headers $headers
-    } catch {
-        $StatusCode = $_.Exception.Response.StatusCode.value__ 
-        if ($PSVersionTable.PSVersion.Major -lt 6) {
-          $streamReader = [System.IO.StreamReader]::new($_.Exception.Response.GetResponseStream())
-          $ErrResp = $streamReader.ReadToEnd() | ConvertFrom-Json
-          $streamReader.Close()
-          $Description = $_.Exception.Response.StatusDescription
-        } else {
-          $ErrResp = $_.ErrorDetails.Message | ConvertFrom-Json
-          $Description = $_.Exception.Response.ReasonPhrase
-        }
-        throw "$(@{StatusCode = $StatusCode; Description = $Description; Message = $ErrResp.error} | ConvertTo-Json)"
+        Invoke-RestMethod -Uri $Uri -Method $Method -Body $Body -Headers $Headers
+    }
+    catch {
+        $StreamReader = [System.IO.StreamReader]::new($_.Exception.Response.GetResponseStream())
+        $ErrResp = $StreamReader.ReadToEnd() | ConvertFrom-Json
+        $StreamReader.Close()
+        throw "$(@{StatusCode = $_.Exception.Response.StatusCode.Value__; Description = $_.Exception.Response.StatusDescription; Message = $ErrResp.Error} | ConvertTo-Json)"
     }
 }

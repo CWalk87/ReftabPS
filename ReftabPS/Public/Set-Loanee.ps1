@@ -1,25 +1,26 @@
-﻿function Set-Loanee() {
-    Param(
-        [parameter(mandatory = $true)]
+function Set-Loanee {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$LoaneeId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [PSCustomObject]$Body,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Method = 'PUT'
-        Body = $Body
-        Endpoint = 'loanees/' + $LoaneeId
+        Secret   = $Secret
+        Public   = $Public
+        Method   = 'PUT'
+        Body     = $Body
+        Endpoint = 'loanees/{0}' -f $LoaneeId
     }
-    
+
     Invoke-Reftab @Parameters
 }

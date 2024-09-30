@@ -1,16 +1,17 @@
-﻿function Set-Keys {
+function Set-Keys {
+    [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [Parameter(Mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
-    $commands = Get-Command -Module ReftabPS
-    
-    foreach($command in $commands) {
-        $global:PSDefaultParameterValues["${command}:Secret"] = $Secret
-        $global:PSDefaultParameterValues["${command}:Public"] = $Public
+
+    $Commands = Get-Command -Module ReftabPS
+
+    foreach ($Command in $Commands.Name) {
+        $global:PSDefaultParameterValues.Add(('{0}:Secret' -f $Command), $Secret)
+        $global:PSDefaultParameterValues.Add(('{0}:Public' -f $Command), $Public)
     }
 }

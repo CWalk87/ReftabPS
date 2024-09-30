@@ -1,8 +1,8 @@
-function New-Loanee {
+function Get-NextAssetId {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
-        [PSCustomObject]$Body,
+        [Parameter()]
+        [string]$LocationId,
 
         [Parameter(Mandatory)]
         [string]$Secret,
@@ -14,9 +14,11 @@ function New-Loanee {
     $Parameters = @{
         Secret   = $Secret
         Public   = $Public
-        Method   = 'POST'
-        Body     = $Body
-        Endpoint = 'loanees'
+        Endpoint = 'nextasset'
+    }
+
+    if ($LocationId) {
+        $Parameters['SearchParameters'] = @{clid = $LocationId }
     }
 
     Invoke-Reftab @Parameters

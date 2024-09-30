@@ -1,20 +1,21 @@
-﻿function Get-Assets() {
-    Param( 
-        [parameter(mandatory = $true)]
-        [string]$secret,
-      
-        [parameter(mandatory = $true)]
-        [string]$public,
+function Get-Assets {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Secret,
 
-        [HashTable]$SearchParameters
+        [Parameter(Mandatory)]
+        [string]$Public,
+
+        [HashTable]$SearchParameters = @{limit=1000;offset=0}
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'assets'
+        Secret           = $Secret
+        Public           = $Public
+        Endpoint         = 'assets'
         SearchParameters = $SearchParameters
     }
-    
+
     Invoke-Reftab @Parameters
 }

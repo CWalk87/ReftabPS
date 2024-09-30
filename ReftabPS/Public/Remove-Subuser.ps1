@@ -1,21 +1,22 @@
-﻿function Remove-Subuser() {
-    Param(
-        [parameter(mandatory = $true)]
+function Remove-Subuser {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$UserId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'subusers/' + $UserId
-        Method = 'DELETE'
+        Secret   = $Secret
+        Public   = $Public
+        Endpoint = 'subusers/{0}' -f $UserId
+        Method   = 'DELETE'
     }
-    
+
     Invoke-Reftab @Parameters
 }

@@ -1,21 +1,22 @@
-﻿function Remove-Asset() {
-    Param(
-        [parameter(mandatory = $true)]
+function Remove-Asset {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$AssetId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'assets/' + $AssetId
-        Method = 'DELETE'
+        Secret   = $Secret
+        Public   = $Public
+        Endpoint = 'assets/{0}' -f $AssetId
+        Method   = 'DELETE'
     }
-    
+
     Invoke-Reftab @Parameters
 }

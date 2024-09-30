@@ -1,20 +1,21 @@
-function Get-Subuser() {
-    Param(
-        [parameter(mandatory = $true)]
+function Get-Subuser {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$UserId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'subusers/' + $UserId
+        Secret   = $Secret
+        Public   = $Public
+        Endpoint = 'subusers/{0}' -f $UserId
     }
-    
+
     Invoke-Reftab @Parameters
 }

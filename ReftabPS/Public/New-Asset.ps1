@@ -1,22 +1,23 @@
-﻿function New-Asset() {
-    Param(      
-        [parameter(mandatory = $true)]
+function New-Asset {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [PSCustomObject]$Body,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Method = 'POST'
-        Body = $Body
+        Secret   = $Secret
+        Public   = $Public
+        Method   = 'POST'
+        Body     = $Body
         Endpoint = 'assets'
     }
-    
+
     Invoke-Reftab @Parameters
 }

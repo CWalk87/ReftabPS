@@ -1,20 +1,21 @@
-function Get-Loanee() {
-    Param(
-        [parameter(mandatory = $true)]
+function Get-Loanee {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [string]$LoaneeId,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
-        Endpoint = 'loanees/' + $LoaneeId
+        Secret   = $Secret
+        Public   = $Public
+        Endpoint = 'loanees/{0}' -f $LoaneeId
     }
-    
+
     Invoke-Reftab @Parameters
 }

@@ -1,9 +1,6 @@
-function New-Loanee {
+function Get-Locations {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
-        [PSCustomObject]$Body,
-
         [Parameter(Mandatory)]
         [string]$Secret,
 
@@ -14,9 +11,7 @@ function New-Loanee {
     $Parameters = @{
         Secret   = $Secret
         Public   = $Public
-        Method   = 'POST'
-        Body     = $Body
-        Endpoint = 'loanees'
+        Endpoint = 'locations'
     }
 
     Invoke-Reftab @Parameters

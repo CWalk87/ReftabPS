@@ -1,22 +1,23 @@
-function New-Loan() {
-    Param(      
-        [parameter(mandatory = $true)]
+function New-Loan {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
         [PSCustomObject]$Body,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Secret,
-      
-        [parameter(mandatory = $true)]
+
+        [Parameter(Mandatory)]
         [string]$Public
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
+        Secret = $Secret
+        Public = $Public
         Method = 'POST'
         Body = $Body
         Endpoint = 'loans'
     }
-    
+
     Invoke-Reftab @Parameters
 }

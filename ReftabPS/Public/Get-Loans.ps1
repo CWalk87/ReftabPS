@@ -1,20 +1,21 @@
-function Get-Loans() {
-    Param( 
-        [parameter(mandatory = $true)]
-        [string]$secret,
-      
-        [parameter(mandatory = $true)]
-        [string]$public,
+function Get-Loans {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Secret,
+
+        [Parameter(Mandatory)]
+        [string]$Public,
 
         [HashTable]$SearchParameters
     )
-    
+
     $Parameters = @{
-        Secret = $secret
-        Public = $public
+        Secret = $Secret
+        Public = $Public
         Endpoint = 'loans'
         SearchParameters = $SearchParameters
     }
-    
+
     Invoke-Reftab @Parameters
 }
